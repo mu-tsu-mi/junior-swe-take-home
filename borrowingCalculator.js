@@ -1,3 +1,5 @@
+const { fetchApiData } = require("./helper/helper");
+
 /**
  * Borrowing Power Calculator
  *
@@ -15,54 +17,23 @@ const INTEREST_RATE = 7.0; // 7.0% baseline interest rate
 const ASSESSMENT_RATE_BUFFER = 3.0; // 3.0% buffer added to interest rates
 
 const api = "http://localhost:3000/api/";
-const PAT = "pat_abcdefghijklmnopqrstuvwxyz0123456789";
 // Legacy placeholder functions to replace with API calls
-async function getTax(income) {
+
+function getTax(income) {
   const params = new URLSearchParams();
   params.append("income", income);
   const url = `${api}tax?${params}`;
 
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${PAT}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Response status: ", response.status);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("This error was returned(tax): ", error);
-  }
+  return fetchApiData(url);
 }
 
-async function getHEM(income, dependents) {
+function getHEM(income, dependents) {
   const params = new URLSearchParams();
   params.append("income", income);
   params.append("dependents", dependents);
   const url = `${api}hem?${params}`;
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${PAT}`,
-        "Content-Type": "application/json",
-      },
-    });
 
-    if (!response.ok) {
-      throw new Error("Response status: ", response.status);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("This error was returned(HEM): ", error);
-  }
+  return fetchApiData(url);
 }
 
 /**
