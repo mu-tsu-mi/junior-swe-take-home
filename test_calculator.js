@@ -7,7 +7,14 @@ const { calculateBorrowingPower } = require("./borrowingCalculator");
 
 describe("Term Deposit Calculator Tests", () => {
   it("should calculate borrowing power for standard values", async () => {
-    const result = await calculateBorrowingPower(120000, 2, 3000, 10000, 7.5);
+    const financialInfo = {
+      income: 120000,
+      dependents: 2,
+      expenses: 3000,
+      creditLimits: 10000,
+      assessmentRate: 7.5,
+    };
+    const result = await calculateBorrowingPower(financialInfo);
 
     assert.ok(
       result.maxLoanAmount > 0,
@@ -18,7 +25,15 @@ describe("Term Deposit Calculator Tests", () => {
   });
 
   it("should return 0 for invalid negative inputs", async () => {
-    const result = await calculateBorrowingPower(30000, 3, 4000, 5000, 7.5);
+    const financialInfo = {
+      income: 30000,
+      dependents: 3,
+      expenses: 4000,
+      creditLimits: 5000,
+      assessmentRate: 7.5,
+    };
+    const result = await calculateBorrowingPower(financialInfo);
+
     assert.strictEqual(result.maxLoanAmount, 0);
     assert.strictEqual(result.monthlyRepayment, 0);
   });
