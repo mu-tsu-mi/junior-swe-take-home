@@ -51,22 +51,46 @@ function runConsoleMode() {
     input: process.stdin,
     output: process.stdout,
   });
+  function printErroMsgThenClose() {
+    console.log("Please enter a positive number.");
+    rl.close();
+  }
 
   console.log("Mortgage Borrowing Power Calculator");
   console.log("===================================");
 
   rl.question("Gross Annual Income: $", (income) => {
+    const parsedIncome = parseFloat(income);
+    if (!Number.isFinite(parsedIncome) || parsedIncome < 0) {
+      printErroMsgThenClose();
+      return;
+    }
     rl.question("Number of Dependents: ", (dependents) => {
+      const parsedDependents = parseInt(dependents);
+      if (!Number.isFinite(parsedDependents) || parsedDependents < 0) {
+        printErroMsgThenClose();
+        return;
+      }
       rl.question("Declared Monthly Expenses: $", (expenses) => {
+        const parsedExpenses = parseFloat(expenses);
+        if (!Number.isFinite(parsedExpenses) || parsedExpenses < 0) {
+          printErroMsgThenClose();
+          return;
+        }
         rl.question("Total Credit Card Limits: $", async (creditLimits) => {
+          const parsedCreditLimits = parseFloat(creditLimits);
+          if (!Number.isFinite(parsedCreditLimits) || parsedCreditLimits < 0) {
+            printErroMsgThenClose();
+            return;
+          }
           // Banks assess loans using base rate + buffer for safety
           const assessmentRate = INTEREST_RATE + ASSESSMENT_RATE_BUFFER;
 
           const financialInfo = {
-            income: parseFloat(income),
-            dependents: parseInt(dependents),
-            expenses: parseFloat(expenses),
-            creditLimits: parseFloat(creditLimits),
+            income: parsedIncome,
+            dependents: parsedDependents,
+            expenses: parsedExpenses,
+            creditLimits: parsedCreditLimits,
             assessmentRate,
           };
 
