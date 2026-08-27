@@ -1,6 +1,7 @@
 const {
   calculateMonthlyRepayment,
   calculateMonthlyRate,
+  calculateMaxLoan,
 } = require("./helper/helper");
 
 /**
@@ -32,11 +33,11 @@ async function calculateBorrowingPower(financialInfo) {
 
   const monthlyRate = calculateMonthlyRate(financialInfo.assessmentRate);
 
-  // Calculate maximum borrowing power using the following formula:
-  // P = M * (1 - (1 + R)^-N) / R
-  const maxLoanAmount =
-    maxMonthlyRepayment *
-    ((1 - Math.pow(1 + monthlyRate, -LOAN_TERM_MONTHS)) / monthlyRate);
+  const maxLoanAmount = calculateMaxLoan(
+    maxMonthlyRepayment,
+    LOAN_TERM_MONTHS,
+    monthlyRate,
+  );
 
   return {
     maxLoanAmount: Number(maxLoanAmount.toFixed(2)),

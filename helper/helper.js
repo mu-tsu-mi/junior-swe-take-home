@@ -70,7 +70,14 @@ function calculateMonthlyRate(annualRate) {
   return annualRate / 100 / 12;
 }
 
+// Calculate maximum borrowing power using the following formula:
+// P = M * (1 - (1 + R)^-N) / R
+function calculateMaxLoan(maxRepayment, term, rate) {
+  return maxRepayment * ((1 - Math.pow(1 + rate, term * -1)) / rate);
+}
+
 module.exports = {
   calculateMonthlyRepayment,
   calculateMonthlyRate,
+  calculateMaxLoan,
 };
