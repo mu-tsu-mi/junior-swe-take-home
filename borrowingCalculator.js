@@ -23,7 +23,7 @@ const ASSESSMENT_RATE_BUFFER = 3.0; // 3.0% buffer added to interest rates
 /**
  * Calculates the total borrowing power amount and the monthly repayment configuration
  */
-async function calculateBorrowingPower(financialInfo) {
+async function calculateStandardLoan(financialInfo) {
   const maxMonthlyRepayment = await calculateMonthlyRepayment(financialInfo);
 
   // Return early if user cannot afford a loan at all
@@ -43,6 +43,16 @@ async function calculateBorrowingPower(financialInfo) {
     maxLoanAmount: Number(maxLoanAmount.toFixed(2)),
     monthlyRepayment: Number(maxMonthlyRepayment.toFixed(2)),
   };
+}
+
+// Select loan type
+function calculateBorrowingPower(type) {
+  switch (type) {
+    case "standard":
+      return calculateStandardLoan;
+    default:
+      console.log("We don't have that type of loan. Please try again.");
+  }
 }
 
 function runConsoleMode() {
@@ -94,7 +104,13 @@ function runConsoleMode() {
             assessmentRate,
           };
 
-          const result = await calculateBorrowingPower(financialInfo);
+          // For future enhancement: Loan type selection
+          const loanType = "standard";
+
+          // Holds loan calculation function of selected loan type
+          const selectLoanType = calculateBorrowingPower(loanType);
+
+          const result = await selectLoanType(financialInfo);
 
           console.log("\n--- Calculation Summary ---");
           console.log(
@@ -115,4 +131,4 @@ if (require.main === module) {
   runConsoleMode();
 }
 
-module.exports = { calculateBorrowingPower };
+module.exports = { calculateStandardLoan };
