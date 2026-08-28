@@ -60,6 +60,7 @@ async function calculateMonthlyRepayment(finInfo) {
     dependents,
     expenses,
   );
+
   // Calculate credit card liability (~3% of total limits)
   const creditCardLiability = creditLimits * 0.03;
 

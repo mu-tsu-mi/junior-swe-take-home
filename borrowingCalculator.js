@@ -2,7 +2,14 @@ const {
   calculateMonthlyRepayment,
   calculateMonthlyRate,
   calculateMaxLoan,
-} = require("./helper/helper");
+} = require("./helper/calc_helper");
+const {
+  isInvalidIncome,
+  isInvalidDependents,
+  isInvalidExpenses,
+  isInvalidCreditLimits,
+  printErrorMsgThenClose,
+} = require("./helper/console_helper");
 
 /**
  * Borrowing Power Calculator
@@ -61,36 +68,35 @@ function runConsoleMode() {
     input: process.stdin,
     output: process.stdout,
   });
-  function printErroMsgThenClose() {
-    console.log("Please enter a positive number.");
-    rl.close();
-  }
 
   console.log("Mortgage Borrowing Power Calculator");
   console.log("===================================");
 
   rl.question("Gross Annual Income: $", (income) => {
     const parsedIncome = parseFloat(income);
-    if (!Number.isFinite(parsedIncome) || parsedIncome < 0) {
-      printErroMsgThenClose();
+    if (isInvalidIncome(parsedIncome)) {
+      printErrorMsgThenClose(rl);
       return;
     }
+
     rl.question("Number of Dependents: ", (dependents) => {
       const parsedDependents = parseInt(dependents);
-      if (!Number.isFinite(parsedDependents) || parsedDependents < 0) {
-        printErroMsgThenClose();
+      if (isInvalidDependents(parsedDependents)) {
+        printErrorMsgThenClose(rl);
         return;
       }
+
       rl.question("Declared Monthly Expenses: $", (expenses) => {
         const parsedExpenses = parseFloat(expenses);
-        if (!Number.isFinite(parsedExpenses) || parsedExpenses < 0) {
-          printErroMsgThenClose();
+        if (isInvalidExpenses(parsedExpenses)) {
+          printErrorMsgThenClose(rl);
           return;
         }
+
         rl.question("Total Credit Card Limits: $", async (creditLimits) => {
           const parsedCreditLimits = parseFloat(creditLimits);
-          if (!Number.isFinite(parsedCreditLimits) || parsedCreditLimits < 0) {
-            printErroMsgThenClose();
+          if (isInvalidCreditLimits(parsedCreditLimits)) {
+            printErrorMsgThenClose(rl);
             return;
           }
           // Banks assess loans using base rate + buffer for safety
